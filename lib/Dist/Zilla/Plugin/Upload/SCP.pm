@@ -25,8 +25,8 @@ supports as a C<host> parameter.
 =cut
 
 has connection => (
-    is => 'ro',
-    isa => Str,
+    is       => 'ro',
+    isa      => Str,
     required => 1,
 );
 
@@ -37,9 +37,9 @@ Remote directory to receive the upload.
 =cut
 
 has directory => (
-    is => 'ro',
-    isa => Path,
-    coerce => 1,
+    is       => 'ro',
+    isa      => Path,
+    coerce   => 1,
     required => 1,
 );
 
@@ -51,22 +51,22 @@ Defaults to false.
 =cut
 
 has clobber => (
-    is => 'ro',
-    isa => Bool,
+    is      => 'ro',
+    isa     => Bool,
     default => 0,
 );
 
 has _ssh => (
-    is => 'ro',
-    isa => 'Net::OpenSSH',
+    is         => 'ro',
+    isa        => 'Net::OpenSSH',
     lazy_build => 1,
 );
 
 sub _build__ssh {
     my $self = shift;
-    my $ssh = Net::OpenSSH->new($self->connection);
-    $self->log_fatal("Couldn't establish an ssh connection: " . $ssh->error)
-        if $ssh->error;
+    my $ssh  = Net::OpenSSH->new( $self->connection );
+    $self->log_fatal( "Couldn't establish an ssh connection: " . $ssh->error )
+      if $ssh->error;
     return $ssh;
 }
 
@@ -74,16 +74,16 @@ sub release {
     my ( $self, $archive ) = @_;
     my $ssh = $self->_ssh;
 
-    my $destination = $self->directory->child($archive->basename);
+    my $destination = $self->directory->child( $archive->basename );
 
-    if ( $ssh->test("/bin/ls", "$destination") && ! $self->clobber ) {
+    if ( $ssh->test( "/bin/ls", "$destination" ) && !$self->clobber ) {
         $self->log_fatal("Destination file $destination exists.  Halting!");
     }
-        
-    $ssh->scp_put("$archive", "$destination")
-        or $self->log_fatal("Error uploading: " . $ssh->error);
 
-    $self->log( "$archive uploaded to " . join(":", $self->connection, $destination) );
+    $ssh->scp_put( "$archive", "$destination" )
+      or $self->log_fatal( "Error uploading: " . $ssh->error );
+
+    $self->log( "$archive uploaded to " . join( ":", $self->connection, $destination ) );
 
     return;
 }
