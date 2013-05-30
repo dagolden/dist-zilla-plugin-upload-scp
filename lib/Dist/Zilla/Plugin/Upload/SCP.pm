@@ -39,6 +39,7 @@ Remote directory to receive the upload.
 has directory => (
     is => 'ro',
     isa => Path,
+    coerce => 1,
     required => 1,
 );
 
@@ -73,13 +74,13 @@ sub release {
     my ( $self, $archive ) = @_;
     my $ssh = $self->_ssh;
 
-    my $destination = $self->directory->child(path($archive)->basename);
+    my $destination = $self->directory->child($archive->basename);
 
-    if ( $ssh->test("/bin/ls", $destination) && ! $self->clobber ) {
+    if ( $ssh->test("/bin/ls", "$destination") && ! $self->clobber ) {
         $self->log_fatal("Destination file $destination exists.  Halting!");
     }
         
-    $ssh->scp_put($archive, $destination)
+    $ssh->scp_put("$archive", "$destination")
         or $self->log_fatal("Error uploading: " . $ssh->error);
 
     $self->log( "$archive uploaded to " . join(":", $self->connection, $destination) );
