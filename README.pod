@@ -27,7 +27,8 @@ but you really should use an SSH key and C<ssh-agent>.
 
 =head2 connection
 
-An ssh connection string, either C<host> or C<user@host>.
+An ssh connection string, either C<host> or C<user@host> or anything else L<Net::OpenSSH>
+supports as a C<host> parameter.
 
 =head2 directory
 

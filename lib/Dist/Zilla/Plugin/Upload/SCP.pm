@@ -19,7 +19,8 @@ with 'Dist::Zilla::Role::Releaser';
 
 =attr connection
 
-An ssh connection string, either C<host> or C<user@host>.
+An ssh connection string, either C<host> or C<user@host> or anything else L<Net::OpenSSH>
+supports as a C<host> parameter.
 
 =cut
 
