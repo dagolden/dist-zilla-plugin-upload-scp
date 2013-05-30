@@ -25,12 +25,12 @@ but you really should use an SSH key and C<ssh-agent>.
 
 =head1 ATTRIBUTES
 
-=head2 connection
+=head2 connection (required)
 
 An ssh connection string, either C<host> or C<user@host> or anything else L<Net::OpenSSH>
 supports as a C<host> parameter.
 
-=head2 directory
+=head2 directory (required)
 
 Remote directory to receive the upload.
 

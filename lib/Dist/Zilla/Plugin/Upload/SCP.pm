@@ -17,7 +17,7 @@ use namespace::autoclean;
 
 with 'Dist::Zilla::Role::Releaser';
 
-=attr connection
+=attr connection (required)
 
 An ssh connection string, either C<host> or C<user@host> or anything else L<Net::OpenSSH>
 supports as a C<host> parameter.
@@ -30,7 +30,7 @@ has connection => (
     required => 1,
 );
 
-=attr directory
+=attr directory (required)
 
 Remote directory to receive the upload.
 
