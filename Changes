@@ -2,6 +2,8 @@ Revision history for Dist-Zilla-Plugin-Upload-SCP
 
 {{$NEXT}}
 
+0.002     2013-06-06 11:44:53 America/New_York
+
     [ADDED]
 
     - 'atomic' parameter allows uploading under a temporary name that
