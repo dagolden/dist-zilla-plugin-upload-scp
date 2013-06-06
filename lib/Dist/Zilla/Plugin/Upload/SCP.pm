@@ -56,6 +56,19 @@ has clobber => (
     default => 0,
 );
 
+=attr atomic
+
+Boolean for whether the file should be uploaded with a temporary name
+and then renamed when the upload is complete.  Defaults to false.
+
+=cut
+
+has atomic => (
+    is      => 'ro',
+    isa     => Bool,
+    default => 0,
+);
+
 has _ssh => (
     is         => 'ro',
     isa        => 'Net::OpenSSH',
@@ -74,16 +87,22 @@ sub release {
     my ( $self, $archive ) = @_;
     my $ssh = $self->_ssh;
 
-    my $destination = $self->directory->child( $archive->basename );
+    my $dest = $self->directory->child( $archive->basename );
+    my $upload_name = $self->atomic ? "$dest.part." . int(rand(2**31)) : $dest;
 
-    if ( $ssh->test( "/bin/ls", "$destination" ) && !$self->clobber ) {
-        $self->log_fatal("Destination file $destination exists.  Halting!");
+    if ( $ssh->test( "/bin/ls", "$dest" ) && !$self->clobber ) {
+        $self->log_fatal("dest file $dest exists.  Halting!");
     }
 
-    $ssh->scp_put( "$archive", "$destination" )
+    $ssh->scp_put( "$archive", "$upload_name" )
       or $self->log_fatal( "Error uploading: " . $ssh->error );
 
-    $self->log( "$archive uploaded to " . join( ":", $self->connection, $destination ) );
+    if ( $self->atomic ) {
+        $ssh->system( "/bin/mv", "-f", "$upload_name", "$dest" )
+            or $self->log_fatal( "Error renaming uploaded file: " . $ssh->error );
+    }
+
+    $self->log( "$archive uploaded to " . join( ":", $self->connection, $dest ) );
 
     return;
 }
