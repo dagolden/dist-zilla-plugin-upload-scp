@@ -8,7 +8,7 @@ Dist::Zilla::Plugin::Upload::SCP - Dist::Zilla release plugin to upload via scp
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 SYNOPSIS
 
@@ -38,6 +38,11 @@ Remote directory to receive the upload.
 
 Boolean for whether an existing destination path should be clobbered.
 Defaults to false.
+
+=head2 atomic
+
+Boolean for whether the file should be uploaded with a temporary name
+and then renamed when the upload is complete.  Defaults to false.
 
 =for Pod::Coverage release
 
